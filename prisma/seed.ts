@@ -1,0 +1,1 @@
+//Create Seeds for Prisma
