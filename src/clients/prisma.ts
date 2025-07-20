@@ -25,7 +25,6 @@ async function connectPrisma() {
     logger.info("Successfully connected to database");
   } catch (error) {
     logger.error("Failed to connect to database:", error);
-    // Don't throw; let the app continue running
   }
 }
 
