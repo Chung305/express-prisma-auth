@@ -21,4 +21,4 @@
 - **Docker:** For containerized deployment
 - **Yaak/Postman:** For manual API testing
 
-Made with ❤️ by ocb
+❤️ ocb

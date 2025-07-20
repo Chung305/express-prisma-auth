@@ -1,6 +1,5 @@
 import { Router, Request, Response } from "express";
 import { AuthController } from "../../controllers/auth_controller";
-import rateLimit from "express-rate-limit";
 import { authenticate, authorize } from "../../middleware/auth";
 import { Role } from "@prisma/client";
 import { loginLimiter, refreshLimiter } from "../../utils/limiter_config";

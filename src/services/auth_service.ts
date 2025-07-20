@@ -7,6 +7,8 @@ import { Role, User } from "@prisma/client";
 import { SafeUser } from "../utils/types";
 import {
   AuthError,
+  DuplicateError,
+  NotAuthenticatedError,
   NotAuthorizedError,
   NotFoundError,
   ValidationError,
@@ -42,8 +44,8 @@ export class AuthService {
       prisma.user.findUnique({ where: { username } }),
     ]);
 
-    if (existingByEmail) throw new Error("Email already registered");
-    if (existingByUsername) throw new Error("Username already taken");
+    if (existingByEmail) throw new DuplicateError("Email already registered");
+    if (existingByUsername) throw new DuplicateError("Username already taken");
 
     const hashedPassword = await argon2.hash(password, {
       type: CONFIG.ARGON2_TYPE,
@@ -97,12 +99,12 @@ export class AuthService {
       where: { OR: [{ email: credential }, { username: credential }] },
     });
     if (!user) {
-      throw new NotAuthorizedError("Invalid email or username");
+      throw new NotAuthenticatedError("Invalid email or username");
     }
 
     const isPasswordValid = await argon2.verify(user.password, password);
     if (!isPasswordValid) {
-      throw new ValidationError("Invalid credentials");
+      throw new NotAuthenticatedError("Invalid credentials");
     }
 
     try {
@@ -127,7 +129,7 @@ export class AuthService {
       return { user: safeUser, token, refreshToken };
     } catch (error) {
       logger.error("Login error:", error);
-      throw new NotAuthorizedError("Failed to log in");
+      throw new AuthError("Failed to log in");
     }
   };
 
@@ -136,7 +138,7 @@ export class AuthService {
    * @throws Error for invalid or expired token.
    */
   public refreshToken = async (refreshToken: string): Promise<AuthResponse> => {
-    if (!refreshToken) throw new Error("No refresh token provided");
+    if (!refreshToken) throw new ValidationError("No refresh token provided");
 
     let decoded: { userId: string };
     try {
@@ -152,7 +154,7 @@ export class AuthService {
       where: { token: refreshToken },
     });
     if (!storedToken || storedToken.expiresAt < new Date()) {
-      throw new Error("Invalid or expired refresh token");
+      throw new NotAuthenticatedError("Invalid or expired refresh token");
     }
 
     const blacklisted = await prisma.blacklist.findUnique({
