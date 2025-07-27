@@ -8,7 +8,8 @@
     "build": "tsc",
     "docker:dbpush": "docker compose exec app npx prisma db push",
     "docker:i": "docker compose exec app pnpm i",
-    "docker:g": "docker compose exec app npx prisma generate"
+    "docker:g": "docker compose exec app npx prisma generate",
+    "studio": "docker-compose exec app npx prisma studio --port 5555"
   },
   "keywords": [],
   "author": "",
