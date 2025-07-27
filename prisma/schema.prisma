@@ -9,15 +9,20 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  username  String   @unique
-  password  String
-  role      Role[]     @default([USER])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                String      @id @default(cuid())
+  email             String      @unique
+  username          String      @unique
+  password          String
+  role              Role[]      @default([USER])
+  status            UserStatus  @default(ACTIVE)
+  messageInTheWebAt DateTime  
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
 
-  tokens    Token[]
+  tokens            Token[]
+  profile           Profile?
+  collection        MessageInTheWeb[]
+  settings          Settings?
 
   @@index([email])
   @@index([username])
@@ -41,9 +46,57 @@ model Blacklist {
   @@index([token])
 }
 
+model Profile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  bio             String?
+  sex             String?
+  location        String?
+  hearts           Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model MessageInTheWeb {
+  id        String   @id @default(cuid())
+  authorId  String   
+  claimerId String?  @unique
+  claimed   Boolean   @default(false)
+  heart     Boolean   @default(false)
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User?    @relation(fields: [claimerId], references: [id], onDelete: Cascade)
+}
+
+model Settings {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  theme               Theme    @default(LIGHT)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+enum Theme {
+  LIGHT
+  DARK
+}
+
 enum Role {
   USER
   ADMIN
   MODERATOR
 }
 
+enum UserStatus {
+  ACTIVE
+  SUBSCRIBED
+  INACTIVE
+  BANNED
+}

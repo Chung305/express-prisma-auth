@@ -25,10 +25,10 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: postgresql://myuser:mypassword@db:5432/mydatabase?schema=public
-      PORT: 3000
+      PORT: 3333
       NODE_ENV: development
     ports:
-      - "3000:3000"
+      - "3333:3333"
     volumes:
       - .:/app
       - /app/node_modules # Preserve container's node_modules

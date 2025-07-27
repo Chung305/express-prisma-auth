@@ -4,7 +4,7 @@ export const registerSchema = z.object({
   email: z.email({ message: "Invalid email format" }),
   password: z
     .string()
-    .min(8, { message: "Password must be at least 8 characters" })
+    .min(7, { message: "Password must be at least 7 characters" })
     .regex(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
       {
@@ -22,7 +22,7 @@ export const loginSchema = z.object({
   credential: z.string().min(3, { message: "Username or email is required" }),
   password: z
     .string()
-    .min(8, { message: "Password must be at least 8 characters" }),
+    .min(7, { message: "Password must be at least 7 characters" }),
 });
 
 export const refreshTokenSchema = z.object({

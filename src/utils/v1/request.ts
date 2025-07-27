@@ -4,7 +4,7 @@ declare namespace Express {
       id: string;
       email: string;
       username: string;
-      role: string;
+      role: any[];
     };
   }
 }

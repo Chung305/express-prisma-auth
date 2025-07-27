@@ -6,5 +6,5 @@ RUN pnpm install
 COPY prisma ./prisma
 RUN npx prisma generate
 COPY . .
-EXPOSE 3000
+EXPOSE 3333
 CMD ["pnpm", "run", "dev"]

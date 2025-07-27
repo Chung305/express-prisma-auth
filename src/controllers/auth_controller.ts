@@ -51,6 +51,20 @@ export class AuthController extends BaseController {
     }
   };
 
+  logout = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { accessToken, refreshToken } = req.body;
+      const result = await this.authService.logout(refreshToken, accessToken);
+      this.handleSuccess(res, result, 200, "Logout successful");
+      logger.info({
+        result,
+        message: "User logged out successfully",
+      });
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
   refreshToken = async (req: Request, res: Response): Promise<void> => {
     try {
       const parsedInput = refreshTokenSchema.safeParse(req.body);

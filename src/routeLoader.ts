@@ -9,7 +9,6 @@ async function loadRoutes(
 ): Promise<void> {
   try {
     const routesPath = path.resolve(routesDir);
-    logger.info(`Attempting to load routes from: ${routesPath}`);
     try {
       await fs.access(routesPath);
     } catch {
@@ -19,7 +18,6 @@ async function loadRoutes(
 
     // Read all subdirectories (e.g., v1, v2)
     const versionDirs = await fs.readdir(routesPath);
-    logger.info(`Found version directories: ${versionDirs.join(", ")}`);
 
     for (const versionDir of versionDirs) {
       const versionPath = path.join(routesPath, versionDir);
@@ -36,12 +34,10 @@ async function loadRoutes(
         for (const file of files) {
           if (file.endsWith(".ts") || file.endsWith(".js")) {
             const routePath = path.join(versionPath, file);
-            logger.info(`Loading route file: ${routePath}`);
 
             const routeModule = await import(routePath);
             const route: Router = routeModule.default;
             versionRouter.use(route);
-            logger.info(`Loaded routes from: ${file} under ${versionPrefix}`);
           }
         }
 

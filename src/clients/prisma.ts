@@ -15,7 +15,6 @@ if (process.env.NODE_ENV !== "production") {
   global.prisma = prisma;
 }
 
-// Log the DATABASE_URL to debug
 logger.info(`Prisma connecting with DATABASE_URL: ${process.env.DATABASE_URL}`);
 
 // Connect without crashing the app

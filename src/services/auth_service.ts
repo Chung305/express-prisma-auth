@@ -58,7 +58,12 @@ export class AuthService {
     try {
       const result = await prisma.$transaction(async (tx) => {
         const user = await tx.user.create({
-          data: { username, email, password: hashedPassword, role: Role.USER },
+          data: {
+            username,
+            email,
+            password: hashedPassword,
+            role: [Role.USER],
+          },
         });
         const token = jwt.sign({ userId: user.id }, this.getJwtSecret(), {
           expiresIn: CONFIG.JWT_TOKEN_EXPIRY,
