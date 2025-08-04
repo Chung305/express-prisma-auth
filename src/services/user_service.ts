@@ -45,7 +45,7 @@ export class UserService {
   };
 
   /**
-   * MessageInTheWeb services
+   * MessageInTheWeb User services
    */
 
   public getRandomMessageInTheWeb = async (
